@@ -18,9 +18,6 @@ app.MapGet("/api/todos/{id}", (int id) =>
 {
     var todo = todos.FirstOrDefault(x => x.Id == id);
 
-    return todo is null
-        ? Results.NotFound()
-        : Results.Ok(todo);
+    return todo;
 });
-
 app.Run();
