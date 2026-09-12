@@ -1,24 +1,23 @@
+using TodoApi.Dtos;
+
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var todos = new List<TodoGetDto>
 {
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
+    new(1, "Learn Minimal API", false),
+    new(2, "Learn Vue", false)
+};
 
 app.MapGet("/", () => "Hello Todo API");
 
-app.Run();
+app.MapGet("/api/todos", () =>
+    Results.Ok(todos));
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+app.MapGet("/api/todos/{id}", (int id) =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    var todo = todos.FirstOrDefault(x => x.Id == id);
+
+    return todo;
+});
+app.Run();
